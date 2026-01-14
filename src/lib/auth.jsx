@@ -44,7 +44,7 @@ export async function getUserRole(userId) {
       .from('profiles')
       .select('role')
       .eq('id', userId)
-      .single();
+      .maybeSingle(); // Use maybeSingle to handle no rows gracefully
 
     if (error) {
       console.error('Error fetching user role:', error);

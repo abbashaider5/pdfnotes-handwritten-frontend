@@ -21,16 +21,37 @@ export function UserOrders() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Fetch user's orders with PDF details
-      const { data, error } = await supabase
+      // Fetch user's orders - get basic order data
+      const { data: ordersData, error } = await supabase
         .from('orders')
-        .select('*, pdfs(*)')
+        .select('*')
         .eq('user_id', user.id)
         .eq('payment_status', 'success')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setOrders(data || []);
+
+      // Fetch PDF details separately for each order
+      const ordersWithPdfs = await Promise.all(
+        (ordersData || []).map(async (order) => {
+          if (!order.pdf_id) return { ...order, pdfs: null };
+
+          const { data: pdfData, error: pdfError } = await supabase
+            .from('pdfs')
+            .select('*')
+            .eq('id', order.pdf_id)
+            .single();
+
+          if (pdfError || !pdfData) {
+            console.error('Error fetching PDF for order:', order.id, pdfError);
+            return { ...order, pdfs: null };
+          }
+
+          return { ...order, pdfs: pdfData };
+        })
+      );
+
+      setOrders(ordersWithPdfs);
     } catch (error) {
       console.error('Error fetching orders:', error);
     } finally {
