@@ -87,7 +87,8 @@ export function AuthorRequestsPage() {
 
         // Send approval email
         try {
-          await fetch('http://localhost:3001/api/send-author-approval-email', {
+          const backendUrl = import.meta.env.VITE_BACKEND_URL;
+          await fetch(`${backendUrl}/api/send-author-approval-email`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -151,7 +152,8 @@ export function AuthorRequestsPage() {
 
         // Send rejection email
         try {
-          await fetch('http://localhost:3001/api/send-author-rejection-email', {
+          const backendUrl = import.meta.env.VITE_BACKEND_URL;
+          await fetch(`${backendUrl}/api/send-author-rejection-email`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

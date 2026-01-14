@@ -40,8 +40,9 @@ export function AuthorRequestModal({ isOpen, onClose, userId }) {
       if (error) throw error;
 
       // Send email notification about the author application
-      try {
-        await fetch('http://localhost:3001/api/send-author-application-email', {
+    try {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        await fetch(`${backendUrl}/api/send-author-application-email`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

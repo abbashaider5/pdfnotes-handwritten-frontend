@@ -74,7 +74,8 @@ export function BuyModal({ isOpen, onClose, pdf, currentUser }) {
     try {
       console.log('Fetching payment settings from server...');
       // Fetch from server endpoint (bypasses RLS)
-      const response = await fetch('http://localhost:3001/api/payment-settings');
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
+      const response = await fetch(`${backendUrl}/api/payment-settings`);
       
       console.log('Response status:', response.status);
       console.log('Response ok:', response.ok);
@@ -144,7 +145,8 @@ export function BuyModal({ isOpen, onClose, pdf, currentUser }) {
       });
 
       // Create order on server
-      const response = await fetch('http://localhost:3001/api/create-order', {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
+      const response = await fetch(`${backendUrl}/api/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -268,9 +270,10 @@ export function BuyModal({ isOpen, onClose, pdf, currentUser }) {
     setProcessing(false);
 
     try {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
       const endpoint = gateway === 'stripe' 
-        ? 'http://localhost:3001/api/verify-stripe-payment'
-        : 'http://localhost:3001/api/verify-razorpay-payment';
+        ? `${backendUrl}/api/verify-stripe-payment`
+        : `${backendUrl}/api/verify-razorpay-payment`;
 
       const body = gateway === 'stripe'
         ? { order_id: orderId, payment_intent_id: paymentId }
@@ -312,7 +315,8 @@ export function BuyModal({ isOpen, onClose, pdf, currentUser }) {
         localStorage.setItem('purchased_pdfs', JSON.stringify(updatedPdfs));
         
         // Set download URL to backend API endpoint
-        setDownloadUrl(`http://localhost:3001/api/download-pdf?order_id=${orderId}`);
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        setDownloadUrl(`${backendUrl}/api/download-pdf?order_id=${orderId}`);
         
         // Show success modal
         setShowSuccessModal(true);

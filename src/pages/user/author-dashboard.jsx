@@ -94,7 +94,8 @@ export function AuthorDashboard() {
         setUserId(user.id);
         
         console.log('Fetching payouts for user:', user.id);
-        const response = await fetch(`http://localhost:3001/api/author/payout-requests?user_id=${user.id}`);
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        const response = await fetch(`${backendUrl}/api/author/payout-requests?user_id=${user.id}`);
         const data = await response.json();
         
         console.log('Payouts response:', data);
@@ -251,7 +252,8 @@ export function AuthorDashboard() {
     setRequestingPayout(true);
 
     try {
-      const response = await fetch('http://localhost:3001/api/author/payout-request', {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
+      const response = await fetch(`${backendUrl}/api/author/payout-request`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
