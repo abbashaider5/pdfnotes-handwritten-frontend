@@ -215,20 +215,29 @@ export function UploadPDF() {
     e.preventDefault();
     setUploading(true);
     setShowOverlay(true);
+    setUploadProgress(0);
+    setUploadStatus('Preparing upload...');
 
     try {
       let pdfUrl = '';
       let previewImagePath = '';
 
       if (pdfFile) {
+        setUploadStatus('Uploading PDF file...');
+        setUploadProgress(10);
         pdfUrl = await uploadFile(pdfFile, 'pdfs');
+        setUploadProgress(50);
       }
 
       if (previewImageFile) {
+        setUploadStatus('Uploading preview image...');
+        setUploadProgress(60);
         previewImagePath = await uploadPreviewImage(previewImageFile);
+        setUploadProgress(80);
       }
 
       setUploadStatus('Saving to database...');
+      setUploadProgress(85);
 
       if (!userId) {
         throw new Error('User not authenticated');
@@ -242,7 +251,7 @@ export function UploadPDF() {
         price: parseFloat(formData.price) || 0,
         status: formData.status,
         pdf_url: pdfUrl,
-        preview_image_path: previewImagePath || null,
+        preview_image_url: previewImagePath || null,
         author_id: userId,
       };
 
@@ -308,8 +317,8 @@ export function UploadPDF() {
             <h3 className="text-2xl font-bold text-gray-900 mb-3">
               Please Wait...
             </h3>
-            <p className="text-gray-600 mb-6 text-lg leading-relaxed">
-              Processing and uploading PDF...
+            <p className="text-gray-600 mb-4 text-base leading-relaxed">
+              {uploadStatus || 'Processing and uploading PDF...'}
             </p>
             {uploading && (
               <div className="space-y-3">

@@ -51,11 +51,11 @@ export function MyPDFs() {
       // Generate signed URLs for preview images
       const pdfsWithPreviewUrls = await Promise.all(
         (data || []).map(async (pdf) => {
-          if (pdf.preview_image_path) {
+          if (pdf.preview_image_url) {
             try {
               const { data: signedUrlData } = await supabase.storage
                 .from('pdfs')
-                .createSignedUrl(pdf.preview_image_path, 300);
+                .createSignedUrl(pdf.preview_image_url, 300);
               return { ...pdf, preview_url: signedUrlData.signedUrl };
             } catch (error) {
               if (import.meta.env.DEV) {
@@ -219,7 +219,7 @@ export function MyPDFs() {
       // Upload new preview image if selected
       if (newCardImage) {
         const newPreviewPath = await uploadPreviewImage(newCardImage);
-        updateData.preview_image_path = newPreviewPath;
+        updateData.preview_image_url = newPreviewPath;
       }
 
       const { error } = await supabase

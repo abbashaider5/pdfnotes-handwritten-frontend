@@ -119,11 +119,11 @@ export function PDFDetail() {
       }
 
       // Generate signed URL for preview image
-      if (data.preview_image_path) {
+      if (data.preview_image_url) {
         try {
           const { data: signedUrlData, error: urlError } = await supabase.storage
             .from('pdfs')
-            .createSignedUrl(data.preview_image_path, 300);
+            .createSignedUrl(data.preview_image_url, 300);
           
           if (urlError) {
             if (import.meta.env.DEV) {
