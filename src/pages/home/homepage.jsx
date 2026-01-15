@@ -74,15 +74,22 @@ export function Homepage() {
 
         setPdfs([]);
       } else {
-        const pdfsWithUrls = (pdfsResponse.data || []).map(pdf => {
-          if (pdf.card_image) {
-            const { data: { publicUrl } } = supabase.storage
-              .from('pdfs')
-              .getPublicUrl(pdf.card_image);
-            return { ...pdf, card_image: publicUrl };
-          }
-          return pdf;
-        });
+        // Generate signed URLs for preview images
+        const pdfsWithUrls = await Promise.all(
+          (pdfsResponse.data || []).map(async (pdf) => {
+            if (pdf.preview_image_url) {
+              try {
+                const { data: signedUrlData } = await supabase.storage
+                  .from('pdfs')
+                  .createSignedUrl(pdf.preview_image_url, 300);
+                return { ...pdf, preview_url: signedUrlData?.signedUrl };
+              } catch (error) {
+                return pdf;
+              }
+            }
+            return pdf;
+          })
+        );
         setPdfs(pdfsWithUrls);
       }
 
@@ -454,9 +461,9 @@ export function Homepage() {
                     <Card key={pdf.id} className="group h-full overflow-hidden rounded-2xl border border-gray-200 hover:border-primary hover:shadow-xl transition-all duration-300 flex flex-col bg-white hover:-translate-y-1">
                       <div className="relative aspect-[4/3] overflow-hidden" style={{ backgroundColor: '#E6F1EF' }}>
                         <Link to={`/pdf/${pdf.id}`} className="block h-full">
-                          {pdf.card_image ? (
+                          {pdf.preview_url ? (
                             <img
-                              src={pdf.card_image}
+                              src={pdf.preview_url}
                               alt={pdf.title}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             />

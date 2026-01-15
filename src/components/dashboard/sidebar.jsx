@@ -60,14 +60,16 @@ const authorMenuItems = [
 
 export function Sidebar({ collapsed, onToggle, isMobile }) {
   const location = useLocation();
-  const [userRole, setUserRole] = useState(null);
+  const [userRole, setUserRole] = useState('loading');
 
   useEffect(() => {
     const fetchUserRole = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         const role = await getUserRole(user.id);
-        setUserRole(role);
+        setUserRole(role || 'user');
+      } else {
+        setUserRole('user');
       }
     };
     fetchUserRole();
@@ -92,7 +94,17 @@ export function Sidebar({ collapsed, onToggle, isMobile }) {
         </div>
 
         <nav className="flex-1 overflow-y-auto p-4 space-y-1">
-            {(userRole === 'admin' ? adminMenuItems : userRole === 'author' ? authorMenuItems : commonMenuItems).map((item) => {
+            {userRole === 'loading' ? (
+              <div className="space-y-2">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="animate-pulse flex items-center gap-3 px-3 py-2.5">
+                    <div className="w-5 h-5 bg-gray-200 rounded"></div>
+                    {!collapsed && <div className="h-4 bg-gray-200 rounded w-24"></div>}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              (userRole === 'admin' ? adminMenuItems : userRole === 'author' ? authorMenuItems : commonMenuItems).map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
               
@@ -126,7 +138,8 @@ export function Sidebar({ collapsed, onToggle, isMobile }) {
                   {!collapsed && <span className="font-medium">{item.label}</span>}
                 </Link>
               );
-            })}
+            })
+          )}
         </nav>
 
         <div className="p-4 border-t">
@@ -147,7 +160,7 @@ export function Sidebar({ collapsed, onToggle, isMobile }) {
 
 export function MobileSidebar({ isOpen, onClose }) {
   const location = useLocation();
-  const [userRole, setUserRole] = useState(null);
+  const [userRole, setUserRole] = useState('loading');
 
   useEffect(() => {
     const fetchUserRole = async () => {
@@ -185,7 +198,17 @@ export function MobileSidebar({ isOpen, onClose }) {
           </div>
 
           <nav className="flex-1 overflow-y-auto p-4 space-y-1">
-            {(userRole === 'admin' ? adminMenuItems : userRole === 'author' ? authorMenuItems : commonMenuItems).map((item) => {
+            {userRole === 'loading' ? (
+              <div className="space-y-2">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="animate-pulse flex items-center gap-3 px-3 py-2.5">
+                    <div className="w-5 h-5 bg-gray-200 rounded"></div>
+                    <div className="h-4 bg-gray-200 rounded w-24"></div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              (userRole === 'admin' ? adminMenuItems : userRole === 'author' ? authorMenuItems : commonMenuItems).map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
               
@@ -220,7 +243,8 @@ export function MobileSidebar({ isOpen, onClose }) {
                   <span className="font-medium">{item.label}</span>
                 </Link>
               );
-            })}
+            })
+          )}
           </nav>
 
           <div className="p-4 border-t">
