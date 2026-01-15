@@ -545,56 +545,85 @@ export function PDFDetail() {
                 <CardTitle className="text-lg">About the Author</CardTitle>
               </CardHeader>
               <CardContent>
-                {loadingAuthor ? (
-                  <div className="flex items-center gap-3">
-                    <div className="animate-pulse h-12 w-12 bg-gray-200 rounded-full"></div>
-                    <div className="flex-1">
-                      <div className="animate-pulse h-4 bg-gray-200 rounded w-32 mb-2"></div>
-                      <div className="animate-pulse h-3 bg-gray-200 rounded w-24"></div>
-                    </div>
-                  </div>
-                ) : author ? (
-                  <div className="flex items-center gap-3">
-                    <div className="h-12 w-12 bg-gradient-to-br from-primary to-teal-600 rounded-full flex items-center justify-center">
-                      <User className="text-white" size={24} />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <p className="font-semibold text-gray-900">
-                          {author.name || 'Author'}
-                        </p>
-                        {author.is_verified && (
-                          <div className="flex items-center gap-1 text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded" title="Verified Author">
-                            <ShieldCheck className="w-3.5 h-3.5" />
-                            <span className="text-xs font-medium text-blue-600">Verified</span>
-                          </div>
-                        )}
-                      </div>
-                      <p className="text-sm text-gray-500">
-                        {author.is_verified ? 'Verified Content Creator' : 'Content Creator'}
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-3">
-                    <div className="h-12 w-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center ring-2 ring-amber-300">
-                      <Star className="text-white" size={24} fill="currentColor" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <p className="font-semibold text-gray-900">Admin</p>
-                        <div className="flex items-center gap-1 bg-amber-100 px-1.5 py-0.5 rounded" title="Premium Content">
-                          <Star className="w-3.5 h-3.5 text-amber-600 fill-current" />
-                          <span className="text-xs font-medium text-amber-700">Premium</span>
-                        </div>
-                      </div>
-                      <p className="text-sm text-gray-500">
-                        Official Platform Content
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
+  {loadingAuthor ? (
+    <div className="flex items-center gap-3">
+      <div className="animate-pulse h-12 w-12 bg-gray-200 rounded-full"></div>
+      <div className="flex-1">
+        <div className="animate-pulse h-4 bg-gray-200 rounded w-32 mb-2"></div>
+        <div className="animate-pulse h-3 bg-gray-200 rounded w-24"></div>
+      </div>
+    </div>
+  ) : author && (author.role === 'admin' || author.is_admin === true) ? (
+    // ✅ Admin / Official Platform Content
+    <div className="flex items-center gap-3">
+      <div className="h-12 w-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center ring-2 ring-amber-300">
+        <Star className="text-white" size={24} fill="currentColor" />
+      </div>
+      <div className="flex-1">
+        <div className="flex items-center gap-2">
+          <p className="font-semibold text-gray-900">Admin</p>
+          <div
+            className="flex items-center gap-1 bg-amber-100 px-1.5 py-0.5 rounded"
+            title="Premium Content"
+          >
+            <Star className="w-3.5 h-3.5 text-amber-600 fill-current" />
+            <span className="text-xs font-medium text-amber-700">Premium</span>
+          </div>
+        </div>
+        <p className="text-sm text-gray-500">Official Platform Content</p>
+      </div>
+    </div>
+  ) : author ? (
+    // ✅ Normal Author Card
+    <div className="flex items-center gap-3">
+      <div className="h-12 w-12 bg-gradient-to-br from-primary to-teal-600 rounded-full flex items-center justify-center">
+        <User className="text-white" size={24} />
+      </div>
+      <div className="flex-1">
+        <div className="flex items-center gap-2 mb-1">
+          <p className="font-semibold text-gray-900">
+            {author.name?.trim() ? author.name : 'Author'}
+          </p>
+
+          {author.is_verified && (
+            <div
+              className="flex items-center gap-1 text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded"
+              title="Verified Author"
+            >
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span className="text-xs font-medium text-blue-600">Verified</span>
+            </div>
+          )}
+        </div>
+
+        <p className="text-sm text-gray-500">
+          {author.is_verified ? 'Verified Content Creator' : 'Content Creator'}
+        </p>
+      </div>
+    </div>
+  ) : (
+    // ✅ Fallback Admin (when author not found)
+    <div className="flex items-center gap-3">
+      <div className="h-12 w-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center ring-2 ring-amber-300">
+        <Star className="text-white" size={24} fill="currentColor" />
+      </div>
+      <div className="flex-1">
+        <div className="flex items-center gap-2">
+          <p className="font-semibold text-gray-900">Admin</p>
+          <div
+            className="flex items-center gap-1 bg-amber-100 px-1.5 py-0.5 rounded"
+            title="Premium Content"
+          >
+            <Star className="w-3.5 h-3.5 text-amber-600 fill-current" />
+            <span className="text-xs font-medium text-amber-700">Premium</span>
+          </div>
+        </div>
+        <p className="text-sm text-gray-500">Official Platform Content</p>
+      </div>
+    </div>
+  )}
+</CardContent>
+
             </Card>
 
             {/* Guarantee */}
