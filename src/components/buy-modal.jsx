@@ -72,38 +72,24 @@ export function BuyModal({ isOpen, onClose, pdf, currentUser }) {
 
   const fetchPaymentSettings = async () => {
     try {
-      console.log('Fetching payment settings from server...');
       // Fetch from server endpoint (bypasses RLS)
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
       const response = await fetch(`${backendUrl}/api/payment-settings`);
       
-      console.log('Response status:', response.status);
-      console.log('Response ok:', response.ok);
-      
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Server error response:', errorText);
         throw new Error(`Server error ${response.status}: ${errorText}`);
       }
 
       const data = await response.json();
-      console.log('Server response data:', data);
       
       const settings = data.settings;
-      console.log('Payment settings parsed:', settings);
       
       setPaymentSettings(settings);
       setLoadingSettings(false);
-      
-      // Debug logging
-      console.log('Payment settings loaded:', settings);
-      console.log('Razorpay enabled:', settings?.razorpay_enabled);
-      console.log('Stripe enabled:', settings?.stripe_enabled);
     } catch (error) {
-      console.error('Error fetching payment settings:', error);
-      console.error('Error details:', error.message);
-      console.error('Error stack:', error.stack);
       setLoadingSettings(false);
+      toast.error('Failed to load payment settings');
     }
   };
 
@@ -137,13 +123,6 @@ export function BuyModal({ isOpen, onClose, pdf, currentUser }) {
   const initiatePayment = async (type, email = null) => {
     setProcessing(true);
     try {
-      console.log('Initiating payment with params:', {
-        pdf_id: pdf.id,
-        amount: pdf.price,
-        purchase_type: type,
-        gateway: selectedGateway,
-      });
-
       // Create order on server
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
       const response = await fetch(`${backendUrl}/api/create-order`, {
@@ -158,12 +137,9 @@ export function BuyModal({ isOpen, onClose, pdf, currentUser }) {
           payment_gateway: selectedGateway,
         }),
       });
-
-      console.log('Create order response status:', response.status);
       
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('Create order error response:', errorData);
         let errorMsg = errorData.error || errorData.details || 'Failed to create order';
         if (errorData.name || errorData.code || errorData.details) {
           errorMsg += `\n\nDetails:\n${errorData.name || ''} ${errorData.code || ''}\n${errorData.details || ''}`;
@@ -172,7 +148,6 @@ export function BuyModal({ isOpen, onClose, pdf, currentUser }) {
       }
 
       const orderData = await response.json();
-      console.log('Order created successfully:', orderData);
 
       if (selectedGateway === 'stripe') {
         // Stripe payment
@@ -182,9 +157,6 @@ export function BuyModal({ isOpen, onClose, pdf, currentUser }) {
         await handleRazorpayPayment(orderData, email);
       }
     } catch (error) {
-      console.error('Payment error:', error);
-      console.error('Error details:', error.message);
-      console.error('Error stack:', error.stack);
       toast.error('Payment failed. Please try again.');
     } finally {
       setProcessing(false);
@@ -198,7 +170,7 @@ export function BuyModal({ isOpen, onClose, pdf, currentUser }) {
       key: paymentSettings?.razorpay_key_id || import.meta.env.VITE_RAZORPAY_KEY_ID,
       amount: (pdf.price * 100).toString(), // Razorpay expects amount in paise (1 INR = 100 paise)
       currency: 'INR', // Razorpay requires uppercase currency code
-      name: 'PDF Store',
+      name: 'PDFNotes',
       description: pdf.title,
       order_id: razorpay_order_id,
       handler: async function (response) {
@@ -216,7 +188,6 @@ export function BuyModal({ isOpen, onClose, pdf, currentUser }) {
         ondismiss: function () {
           setProcessing(false);
           setVerifying(false);
-          console.log('Payment modal dismissed');
           toast.warning('Payment cancelled');
         },
       },
@@ -233,16 +204,8 @@ export function BuyModal({ isOpen, onClose, pdf, currentUser }) {
     const stripePublishableKey = paymentSettings?.stripe_publishable_key;
     
     if (!stripePublishableKey || typeof stripePublishableKey !== 'string' || stripePublishableKey.trim() === '') {
-      console.error('Stripe publishable key is invalid or missing:', {
-        hasPaymentSettings: !!paymentSettings,
-        hasPublishableKey: !!stripePublishableKey,
-        keyType: typeof stripePublishableKey,
-        keyLength: stripePublishableKey?.length || 0
-      });
       throw new Error('Stripe payment is not configured. Please contact support.');
     }
-
-    console.log('Initializing Stripe with publishable key (first 10 chars):', stripePublishableKey.substring(0, 10) + '...');
 
     const stripe = window.Stripe(stripePublishableKey);
 
@@ -325,7 +288,6 @@ export function BuyModal({ isOpen, onClose, pdf, currentUser }) {
         toast.error('Payment verification failed. Please contact support.');
       }
     } catch (error) {
-      console.error('Verification error:', error);
       setVerifying(false);
       toast.error('Payment verification failed. Please contact support.');
     }
@@ -530,12 +492,6 @@ export function BuyModal({ isOpen, onClose, pdf, currentUser }) {
       </div>
     );
   }
-  
-  // Debug logging
-  console.log('PaymentSettings state:', paymentSettings);
-  console.log('razorpayEnabled:', razorpayEnabled);
-  console.log('stripeEnabled:', stripeEnabled);
-  console.log('selectedGateway:', selectedGateway);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">

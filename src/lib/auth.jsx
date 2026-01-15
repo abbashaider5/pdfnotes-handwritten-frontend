@@ -8,7 +8,9 @@ export async function handleLogout() {
     await supabase.auth.signOut();
     window.location.href = '/login';
   } catch (error) {
-    console.error('Logout error:', error);
+    if (import.meta.env.DEV) {
+
+    }
   }
 }
 
@@ -28,11 +30,15 @@ export async function ensureProfile(user) {
       });
     
     if (error) {
-      console.error('Error ensuring profile:', error);
+      if (import.meta.env.DEV) {
+
+      }
       throw error;
     }
   } catch (error) {
-    console.error('Profile creation error:', error);
+    if (import.meta.env.DEV) {
+
+    }
     throw error;
   }
 }
@@ -47,15 +53,18 @@ export async function getUserRole(userId) {
       .maybeSingle(); // Use maybeSingle to handle no rows gracefully
 
     if (error) {
-      console.error('Error fetching user role:', error);
+      if (import.meta.env.DEV) {
+
+      }
       return 'user'; // Default to user
     }
 
     const role = data?.role || 'user';
-    console.log('User ID:', userId, 'Role:', role);
     return role;
   } catch (error) {
-    console.error('Error getting user role:', error);
+    if (import.meta.env.DEV) {
+
+    }
     return 'user';
   }
 }

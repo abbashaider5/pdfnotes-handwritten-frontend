@@ -73,7 +73,7 @@ export function Users() {
 
       setUsers(usersWithStats);
     } catch (error) {
-      console.error('Error fetching users:', error);
+
     } finally {
       setLoading(false);
     }
@@ -85,7 +85,8 @@ export function Users() {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         
-        const response = await fetch(`http://localhost:3001/api/admin/authors/${userId}/verify`, {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+        const response = await fetch(`${backendUrl}/api/admin/authors/${userId}/verify`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -98,7 +99,7 @@ export function Users() {
 
         if (!response.ok) {
           const errorText = await response.text();
-          console.error('Verification API error:', response.status, errorText);
+
           toast.error(`Failed: ${errorText || response.statusText}`);
           return;
         }
@@ -107,7 +108,7 @@ export function Users() {
         try {
           data = await response.json();
         } catch (parseError) {
-          console.error('Failed to parse response:', parseError);
+
           toast.error('Failed to parse server response');
           return;
         }
@@ -121,7 +122,7 @@ export function Users() {
           toast.error(data.error || 'Failed to update verification status');
         }
       } catch (error) {
-        console.error('Error toggling verification:', error);
+
         toast.error('Failed to update verification status');
       } finally {
         setUpdatingVerification(null);

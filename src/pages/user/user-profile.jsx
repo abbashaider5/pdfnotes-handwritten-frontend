@@ -33,7 +33,7 @@ export function UserProfile() {
         createdAt: profileData?.created_at || user.created_at || '',
       });
     } catch (error) {
-      console.error('Error fetching profile:', error);
+
     } finally {
       setLoading(false);
     }

@@ -71,7 +71,7 @@ export function Homepage() {
       setCategories(categoriesResponse.data || []);
 
       if (pdfsResponse.error) {
-        console.error('Error fetching PDFs:', pdfsResponse.error);
+
         setPdfs([]);
       } else {
         const pdfsWithUrls = (pdfsResponse.data || []).map(pdf => {
@@ -87,18 +87,18 @@ export function Homepage() {
       }
 
       if (subjectsResponse.error) {
-        console.error('Error fetching subjects:', subjectsResponse.error);
+
         setSubjects([]);
       } else {
         setSubjects(subjectsResponse.data || []);
       }
 
       if (categoriesResponse.error) {
-        console.error('Error fetching categories:', categoriesResponse.error);
+
         setCategories([]);
       }
     } catch (error) {
-      console.error('Error fetching data:', error);
+
       setPdfs([]);
       setSubjects([]);
     } finally {
@@ -131,7 +131,7 @@ export function Homepage() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-8">
               <Link to="/" className="text-2xl font-bold text-primary">
-                PDF Store
+                PDFNotes
               </Link>
               <div className="hidden md:flex items-center gap-6">
                 <Link to="/" className="text-gray-600 hover:text-primary font-medium transition-colors">
@@ -209,10 +209,10 @@ export function Homepage() {
                 <span className="text-sm font-semibold text-primary">Trusted by 50,000+ Students</span>
               </div>
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-5 leading-tight">
-                Master Your Studies with <span className="bg-gradient-to-r from-primary to-teal-600 bg-clip-text text-transparent">Premium HandWritten Notes</span>
+                Master Your Studies with <span className="bg-gradient-to-r from-primary to-teal-600 bg-clip-text text-transparent">Premium Handwritten Notes</span>
               </h1>
               <p className="text-base text-gray-600 mb-7 leading-relaxed">
-                Discover expertly crafted handwritten notes, assignments, and study resources from top-performing students worldwide
+                Buy high-quality handwritten study notes in PDF format. Created by top students, verified for quality, and delivered instantly.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 mb-6">
                 <Link to="/browse">
@@ -604,11 +604,17 @@ export function Homepage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
               <h3 className="text-xl font-bold text-primary mb-4">
-                PDF Store
+                PDFNotes
               </h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                Your premium destination for high-quality study materials
+              <p className="text-gray-400 text-sm leading-relaxed mb-2">
+                Your premium destination for high-quality handwritten study notes
               </p>
+              <p className="text-gray-500 text-xs italic">
+                A HyDigit Product
+              </p>
+              <a href="https://pdfnotes.hydigit.net" className="text-gray-400 hover:text-primary text-xs mt-1 block">
+                pdfnotes.hydigit.net
+              </a>
             </div>
             <div>
               <h3 className="text-lg font-semibold text-white mb-4">Quick Links</h3>
@@ -635,7 +641,7 @@ export function Homepage() {
           </div>
           <div className="border-t border-gray-800 pt-6 text-center">
             <p className="text-gray-400 text-sm">
-              © 2026 PDF Store. All rights reserved.
+              © {new Date().getFullYear()} PDFNotes. A HyDigit Product. All rights reserved.
             </p>
           </div>
         </div>

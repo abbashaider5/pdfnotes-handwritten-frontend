@@ -42,7 +42,7 @@ export function Account() {
       setPurchases(purchasesData.data || []);
       setOrders(ordersData.data || []);
     } catch (error) {
-      console.error('Error fetching account data:', error);
+
     } finally {
       setLoading(false);
     }
@@ -53,7 +53,7 @@ export function Account() {
       await supabase.auth.signOut();
       window.location.href = '/';
     } catch (error) {
-      console.error('Error logging out:', error);
+
     }
   };
 
@@ -75,7 +75,7 @@ export function Account() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-8">
               <a href="/" className="text-2xl font-bold text-primary">
-                PDF Store
+                PDFNotes
               </a>
             </div>
             <div className="flex items-center gap-4">

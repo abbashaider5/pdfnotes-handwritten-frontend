@@ -24,7 +24,8 @@ export function AdminPayouts() {
   const fetchPayouts = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:3001/api/admin/payout-requests');
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+      const response = await fetch(`${backendUrl}/api/admin/payout-requests`);
       const data = await response.json();
       
       if (data.success) {
@@ -37,7 +38,9 @@ export function AdminPayouts() {
         setPayouts(filteredPayouts);
       }
     } catch (error) {
-      console.error('Error fetching payouts:', error);
+      if (import.meta.env.DEV) {
+
+      }
       toast.error('Failed to load payout requests');
     } finally {
       setLoading(false);
@@ -72,8 +75,9 @@ export function AdminPayouts() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
       const response = await fetch(
-        `http://localhost:3001/api/admin/payout-requests/${selectedPayout.id}`,
+        `${backendUrl}/api/admin/payout-requests/${selectedPayout.id}`,
         {
           method: 'PUT',
           headers: {
@@ -99,7 +103,9 @@ export function AdminPayouts() {
         toast.error(data.error || 'Failed to update payout');
       }
     } catch (error) {
-      console.error('Error updating payout:', error);
+      if (import.meta.env.DEV) {
+
+      }
       toast.error('Failed to update payout');
     } finally {
       setUpdating(false);

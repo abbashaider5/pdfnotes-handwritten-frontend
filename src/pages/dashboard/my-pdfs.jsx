@@ -58,7 +58,9 @@ export function MyPDFs() {
                 .createSignedUrl(pdf.preview_image_path, 300);
               return { ...pdf, preview_url: signedUrlData.signedUrl };
             } catch (error) {
-              console.error('Error generating signed URL for preview:', error);
+              if (import.meta.env.DEV) {
+
+              }
               return pdf;
             }
           }
@@ -68,7 +70,9 @@ export function MyPDFs() {
       
       setPdfs(pdfsWithPreviewUrls);
     } catch (error) {
-      console.error('Error fetching PDFs:', error);
+      if (import.meta.env.DEV) {
+
+      }
     } finally {
       setLoading(false);
     }
@@ -84,7 +88,9 @@ export function MyPDFs() {
       if (error) throw error;
       setCategories(data || []);
     } catch (error) {
-      console.error('Error fetching categories:', error);
+      if (import.meta.env.DEV) {
+
+      }
     }
   };
 
@@ -99,7 +105,9 @@ export function MyPDFs() {
       if (error) throw error;
       setSubjects(data || []);
     } catch (error) {
-      console.error('Error fetching subjects:', error);
+      if (import.meta.env.DEV) {
+
+      }
     }
   };
 
@@ -123,7 +131,9 @@ export function MyPDFs() {
       if (error) throw error;
       fetchPDFs();
     } catch (error) {
-      console.error('Error updating PDF status:', error);
+      if (import.meta.env.DEV) {
+
+      }
       toast.error('Error updating status');
     }
   };
@@ -137,7 +147,7 @@ export function MyPDFs() {
       if (error) throw error;
       fetchPDFs();
     } catch (error) {
-      console.error('Error deleting PDF:', error);
+
       toast.error('Error deleting PDF');
     }
   };
@@ -225,7 +235,7 @@ export function MyPDFs() {
       setCardImagePreview(null);
       toast.success('PDF updated successfully!');
     } catch (error) {
-      console.error('Error updating PDF:', error);
+
       toast.error('Error updating PDF. Please try again.');
     } finally {
       setSaving(false);

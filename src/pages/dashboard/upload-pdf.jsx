@@ -64,7 +64,7 @@ export function UploadPDF() {
       if (error) throw error;
       setCategories(data || []);
     } catch (error) {
-      console.error('Error fetching categories:', error);
+
     }
   };
 
@@ -80,7 +80,7 @@ export function UploadPDF() {
       if (error) throw error;
       setSubjects(data || []);
     } catch (error) {
-      console.error('Error fetching subjects:', error);
+
     }
   };
 
@@ -159,9 +159,6 @@ export function UploadPDF() {
     setPdfUploading(true);
     setPdfUploadProgress(0);
 
-    console.log('Uploading PDF file with path:', filePath);
-    console.log('Original filename:', file.name);
-    console.log('Sanitized filename:', sanitizedOriginalName);
 
     const { data, error: uploadError } = await supabase.storage
       .from('pdfs')
@@ -177,11 +174,10 @@ export function UploadPDF() {
     setPdfUploading(false);
 
     if (uploadError) {
-      console.error('Storage upload error:', uploadError);
+
       throw uploadError;
     }
 
-    console.log('File uploaded successfully:', filePath);
     return filePath;
   };
 
@@ -195,9 +191,6 @@ export function UploadPDF() {
     setUploadStatus('Uploading preview image...');
     setUploadProgress(0);
 
-    console.log('Uploading preview image with path:', filePath);
-    console.log('Original filename:', file.name);
-    console.log('Sanitized filename:', sanitizedOriginalName);
 
     const { data, error: uploadError } = await supabase.storage
       .from('pdfs')
@@ -211,11 +204,10 @@ export function UploadPDF() {
       });
 
     if (uploadError) {
-      console.error('Preview image upload error:', uploadError);
+
       throw uploadError;
     }
 
-    console.log('Preview image uploaded successfully:', filePath);
     return filePath;
   };
 
@@ -229,19 +221,13 @@ export function UploadPDF() {
       let previewImagePath = '';
 
       if (pdfFile) {
-        console.log('Uploading PDF file...');
         pdfUrl = await uploadFile(pdfFile, 'pdfs');
-        console.log('PDF uploaded to:', pdfUrl);
       }
 
       if (previewImageFile) {
-        console.log('Uploading preview image...');
         previewImagePath = await uploadPreviewImage(previewImageFile);
-        console.log('Preview image uploaded to:', previewImagePath);
       }
 
-      console.log('Final preview_image_path value for database:', previewImagePath);
-      console.log('Final pdf_url value for database:', pdfUrl);
       setUploadStatus('Saving to database...');
 
       if (!userId) {
@@ -260,16 +246,14 @@ export function UploadPDF() {
         author_id: userId,
       };
 
-      console.log('Inserting PDF data:', pdfData);
 
       const { error, data: insertedData } = await supabase.from('pdfs').insert([pdfData]).select();
 
       if (error) {
-        console.error('Database insert error:', error);
+
         throw error;
       }
 
-      console.log('PDF inserted successfully:', insertedData);
 
       setUploadProgress(100);
       setUploadStatus('Upload complete!');
@@ -284,7 +268,7 @@ export function UploadPDF() {
         }, 2000);
       }, 500);
     } catch (error) {
-      console.error('Error uploading PDF:', error);
+
       setShowOverlay(false);
       setUploadStatus(error.message || 'Upload failed. Please try again.');
     } finally {

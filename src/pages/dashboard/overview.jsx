@@ -125,7 +125,7 @@ export function DashboardOverview() {
       setSalesData(chartData.length > 0 ? chartData : []);
 
     } catch (error) {
-      console.error('Error fetching dashboard data:', error);
+
     } finally {
       setLoading(false);
     }

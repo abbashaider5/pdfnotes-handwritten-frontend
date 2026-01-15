@@ -1,20 +1,20 @@
 import {
-  Award,
-  Banknote,
-  Book,
-  ChevronLeft,
-  ChevronRight,
-  ExternalLink,
-  FileText,
-  LayoutDashboard,
-  LogOut,
-  Settings,
-  ShieldCheck,
-  ShoppingBag,
-  Tag,
-  TrendingUp,
-  Upload,
-  Users
+    Award,
+    Banknote,
+    Book,
+    ChevronLeft,
+    ChevronRight,
+    ExternalLink,
+    FileText,
+    LayoutDashboard,
+    LogOut,
+    Settings,
+    ShieldCheck,
+    ShoppingBag,
+    Tag,
+    TrendingUp,
+    Upload,
+    Users
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -82,7 +82,7 @@ export function Sidebar({ collapsed, onToggle, isMobile }) {
     >
       <div className="flex flex-col h-full">
         <div className="flex items-center justify-between p-4 border-b">
-          {!collapsed && <h1 className="text-xl font-bold text-primary">PDF Store</h1>}
+          {!collapsed && <h1 className="text-xl font-bold text-primary">PDFNotes</h1>}
           <button
             onClick={onToggle}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -175,7 +175,7 @@ export function MobileSidebar({ isOpen, onClose }) {
       >
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between p-4 border-b">
-            <h1 className="text-xl font-bold text-primary">PDF Store</h1>
+            <h1 className="text-xl font-bold text-primary">PDFNotes</h1>
             <button
               onClick={onClose}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"

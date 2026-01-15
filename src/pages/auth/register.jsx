@@ -61,7 +61,9 @@ export function RegisterPage() {
           ]);
 
         if (profileError) {
-          console.error('Profile creation error:', profileError);
+          if (import.meta.env.DEV) {
+
+          }
           // Don't throw, auth was successful
         }
 
@@ -78,9 +80,10 @@ export function RegisterPage() {
               name: formData.name,
             }),
           });
-          console.log('Welcome email sent to:', data.user.email);
         } catch (emailError) {
-          console.error('Failed to send welcome email:', emailError);
+          if (import.meta.env.DEV) {
+
+          }
           // Don't throw - registration was successful
         }
       }
@@ -90,7 +93,9 @@ export function RegisterPage() {
         state: { message: 'Registration successful! Please login.' } 
       });
     } catch (error) {
-      console.error('Registration error:', error);
+      if (import.meta.env.DEV) {
+
+      }
       setError(error.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
@@ -283,7 +288,7 @@ export function RegisterPage() {
           {/* Right Column - Benefits */}
           <div className="space-y-4 flex flex-col justify-center h-full py-8 lg:py-0">
             <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 text-center lg:text-left">
-              Why Choose PDF Store?
+              Why Choose PDFNotes?
             </h2>
             <ul className="space-y-3 text-center">
               <li className="flex items-center justify-center lg:justify-start gap-3 text-gray-700">

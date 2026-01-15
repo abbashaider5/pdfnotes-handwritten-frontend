@@ -18,7 +18,7 @@ export function LoginPage() {
   });
 
   useEffect(() => {
-    document.title = 'PDF Store - Sign In';
+    document.title = 'PDFNotes - Sign In | A HyDigit Product';
     checkPendingPurchase();
   }, []);
 
@@ -86,7 +86,6 @@ export function LoginPage() {
         
         // Get user role and redirect appropriately
         const role = await getUserRole(data.user.id);
-        console.log('User role:', role);
         
         // Check for pending purchase after successful login
         const pendingPurchase = sessionStorage.getItem('pendingPurchase');
@@ -101,7 +100,9 @@ export function LoginPage() {
         }
       }
     } catch (error) {
-      console.error('Login error:', error);
+      if (import.meta.env.DEV) {
+
+      }
       setError(error.message || 'Invalid email or password');
     } finally {
       setLoading(false);
@@ -262,7 +263,7 @@ export function LoginPage() {
           {/* Right Column - Benefits */}
           <div className="space-y-4 flex flex-col justify-center h-full py-8 lg:py-0">
             <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 text-center lg:text-left">
-              Why Choose PDF Store?
+              Why Choose PDFNotes?
             </h2>
             <ul className="space-y-3 text-center">
               <li className="flex items-center justify-center lg:justify-start gap-3 text-gray-700">

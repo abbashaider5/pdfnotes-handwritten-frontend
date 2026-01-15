@@ -44,7 +44,7 @@ export function Subjects() {
         setSelectedCategory(data[0].id);
       }
     } catch (error) {
-      console.error('Error fetching categories:', error);
+
     }
   };
 
@@ -60,7 +60,7 @@ export function Subjects() {
       if (error) throw error;
       setSubjects(data || []);
     } catch (error) {
-      console.error('Error fetching subjects:', error);
+
     } finally {
       setLoading(false);
     }
@@ -97,7 +97,7 @@ export function Subjects() {
       resetForm();
       fetchSubjects(selectedCategory);
     } catch (error) {
-      console.error('Error saving subject:', error);
+
       toast.error('Error saving subject');
     }
   };
@@ -123,7 +123,7 @@ export function Subjects() {
       if (error) throw error;
       fetchSubjects(selectedCategory);
     } catch (error) {
-      console.error('Error deleting subject:', error);
+
       toast.error('Error deleting subject');
     }
   };
@@ -138,7 +138,7 @@ export function Subjects() {
       if (error) throw error;
       fetchSubjects(selectedCategory);
     } catch (error) {
-      console.error('Error toggling subject:', error);
+
     }
   };
 

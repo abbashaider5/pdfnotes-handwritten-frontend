@@ -43,7 +43,9 @@ export function UserOrders() {
             .single();
 
           if (pdfError || !pdfData) {
-            console.error('Error fetching PDF for order:', order.id, pdfError);
+            if (import.meta.env.DEV) {
+
+            }
             return { ...order, pdfs: null };
           }
 
@@ -53,7 +55,9 @@ export function UserOrders() {
 
       setOrders(ordersWithPdfs);
     } catch (error) {
-      console.error('Error fetching orders:', error);
+      if (import.meta.env.DEV) {
+
+      }
     } finally {
       setLoading(false);
     }
@@ -84,7 +88,9 @@ export function UserOrders() {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Download error:', error);
+      if (import.meta.env.DEV) {
+
+      }
       toast.error('Download failed. Please try again.');
     } finally {
       setDownloading(prev => ({ ...prev, [orderId]: false }));

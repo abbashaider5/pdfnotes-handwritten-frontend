@@ -71,11 +71,9 @@ export function UserDashboard() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        console.log('Fetching payouts for user:', user.id);
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
         const response = await fetch(`${backendUrl}/api/author/payout-requests?user_id=${user.id}`);
         const data = await response.json();
-        console.log('Payouts response:', data);
         if (data.success) {
           setPayouts(data.payouts || []);
         } else {
@@ -83,7 +81,9 @@ export function UserDashboard() {
         }
       }
     } catch (error) {
-      console.error('Error fetching payouts:', error);
+      if (import.meta.env.DEV) {
+
+      }
       setPayouts([]);
     } finally {
       setLoading(false);
@@ -101,7 +101,6 @@ export function UserDashboard() {
       // Check if user is an author from profiles table (source of truth)
       const userRole = await getUserRole(user.id);
       const isUserAuthor = userRole === 'author' || userRole === 'admin';
-      console.log('User Role Check (from profiles table):', { userRole, isUserAuthor, userId: user.id });
       setIsAuthor(isUserAuthor);
 
       // Fetch all orders for this user
@@ -143,12 +142,16 @@ export function UserDashboard() {
         .limit(1);
 
       if (authError) {
-        console.error('Error fetching author request:', authError);
+        if (import.meta.env.DEV) {
+
+        }
       } else {
         setAuthorRequest(authRequests?.[0] || null);
       }
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      if (import.meta.env.DEV) {
+
+      }
     } finally {
       setLoading(false);
     }
@@ -193,7 +196,9 @@ export function UserDashboard() {
       setThresholdAmount(userThreshold);
       setThresholdInput(userThreshold);
     } catch (error) {
-      console.error('Error fetching author stats:', error);
+      if (import.meta.env.DEV) {
+
+      }
     } finally {
       setLoading(false);
     }
@@ -213,7 +218,9 @@ export function UserDashboard() {
       setThresholdAmount(parseFloat(thresholdInput));
       toast.success('Threshold amount updated successfully!');
     } catch (error) {
-      console.error('Error updating threshold:', error);
+      if (import.meta.env.DEV) {
+
+      }
       toast.error('Failed to update threshold amount. Please try again.');
     }
   };
@@ -235,7 +242,9 @@ export function UserDashboard() {
       await fetchAuthorStats();
       toast.success('Earnings cleared successfully!');
     } catch (error) {
-      console.error('Error clearing earnings:', error);
+      if (import.meta.env.DEV) {
+
+      }
       toast.error('Failed to clear earnings. Please try again.');
     }
   };
@@ -254,12 +263,10 @@ export function UserDashboard() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
-      console.log('Uploading PDF for user:', user.id);
 
       // Upload PDF file with progress tracking
       const fileExt = uploadForm.file.name.split('.').pop();
       const pdfFileName = `${user.id}/${Date.now()}_pdf.${fileExt}`;
-      console.log('Uploading PDF to storage:', pdfFileName);
       
       const { error: uploadError, data: uploadData } = await supabase.storage
         .from('pdfs')
@@ -268,21 +275,20 @@ export function UserDashboard() {
           onUploadProgress: (progress) => {
             const percent = (progress.loaded / progress.total) * 100;
             setUploadProgress(Math.round(percent));
-            console.log(`Upload progress: ${Math.round(percent)}%`);
           }
         });
 
       if (uploadError) {
-        console.error('Storage upload error:', uploadError);
+        if (import.meta.env.DEV) {
+
+        }
         throw new Error(`Storage error: ${uploadError.message || 'Failed to upload file'}`);
       }
-      console.log('PDF uploaded successfully:', uploadData);
       setUploadStage('Saving to database...');
 
       const { data: { publicUrl } } = supabase.storage
         .from('pdfs')
         .getPublicUrl(pdfFileName);
-      console.log('Public URL:', publicUrl);
 
       // Upload preview image if provided
       let previewImageUrl = null;
@@ -290,7 +296,6 @@ export function UserDashboard() {
         setUploadStage('Uploading preview image...');
         const imageExt = uploadForm.previewImage.name.split('.').pop();
         const imageFileName = `${user.id}/${Date.now()}_preview.${imageExt}`;
-        console.log('Uploading preview image:', imageFileName);
         
         const { error: imageUploadError, data: imageData } = await supabase.storage
           .from('pdfs')
@@ -303,10 +308,11 @@ export function UserDashboard() {
           });
 
         if (imageUploadError) {
-          console.error('Image upload error:', imageUploadError);
+          if (import.meta.env.DEV) {
+
+          }
           throw new Error(`Image upload error: ${imageUploadError.message || 'Failed to upload image'}`);
         }
-        console.log('Image uploaded successfully:', imageData);
         setUploadStage('Creating PDF record...');
 
         const { data: { publicUrl: imagePublicUrl } } = supabase.storage
@@ -331,7 +337,6 @@ export function UserDashboard() {
         subject_id: null,
         category_id: null,
       };
-      console.log('Inserting PDF record:', pdfData);
 
       const { error: insertError, data: insertData } = await supabase
         .from('pdfs')
@@ -340,11 +345,11 @@ export function UserDashboard() {
         .single();
 
       if (insertError) {
-        console.error('Database insert error:', insertError);
-        console.error('Error details:', JSON.stringify(insertError, null, 2));
+        if (import.meta.env.DEV) {
+
+        }
         throw new Error(`Database error: ${insertError.message || 'Failed to save PDF'}`);
       }
-      console.log('PDF inserted successfully:', insertData);
 
       setUploadForm({
         title: '',
@@ -358,8 +363,7 @@ export function UserDashboard() {
       await fetchAuthorStats();
       toast.success('PDF uploaded successfully!');
     } catch (error) {
-      console.error('Error uploading PDF:', error);
-      console.error('Full error:', JSON.stringify(error, null, 2));
+
       toast.error(error.message || 'Failed to upload PDF. Please try again.');
     } finally {
       setUploading(false);

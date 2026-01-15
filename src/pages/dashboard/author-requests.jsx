@@ -33,7 +33,9 @@ export function AuthorRequestsPage() {
       if (error) throw error;
       setRequests(data || []);
     } catch (error) {
-      console.error('Error fetching author requests:', error);
+      if (import.meta.env.DEV) {
+
+      }
     } finally {
       setLoading(false);
     }
@@ -69,7 +71,9 @@ export function AuthorRequestsPage() {
         );
 
         if (authError) {
-          console.error('Error updating user role:', authError);
+          if (import.meta.env.DEV) {
+
+          }
         }
 
         // Update profiles table with is_author and role
@@ -82,7 +86,9 @@ export function AuthorRequestsPage() {
           .eq('id', requestData.user_id);
 
         if (profileError) {
-          console.error('Error updating profile:', profileError);
+          if (import.meta.env.DEV) {
+
+          }
         }
 
         // Send approval email
@@ -99,14 +105,18 @@ export function AuthorRequestsPage() {
             }),
           });
         } catch (emailError) {
-          console.error('Error sending approval email:', emailError);
+          if (import.meta.env.DEV) {
+
+          }
         }
       }
 
       await fetchRequests();
       toast.success('Author request approved successfully!');
     } catch (error) {
-      console.error('Error approving request:', error);
+      if (import.meta.env.DEV) {
+
+      }
       toast.error('Failed to approve request. Please try again.');
     } finally {
       setProcessing(null);
@@ -147,7 +157,9 @@ export function AuthorRequestsPage() {
           .eq('id', requestData.user_id);
 
         if (profileError) {
-          console.error('Error updating profile:', profileError);
+          if (import.meta.env.DEV) {
+
+          }
         }
 
         // Send rejection email
@@ -165,14 +177,18 @@ export function AuthorRequestsPage() {
             }),
           });
         } catch (emailError) {
-          console.error('Error sending rejection email:', emailError);
+          if (import.meta.env.DEV) {
+
+          }
         }
       }
 
       await fetchRequests();
       toast.success('Author request rejected.');
     } catch (error) {
-      console.error('Error rejecting request:', error);
+      if (import.meta.env.DEV) {
+
+      }
       toast.error('Failed to reject request. Please try again.');
     } finally {
       setProcessing(null);

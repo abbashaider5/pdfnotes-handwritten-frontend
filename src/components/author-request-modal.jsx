@@ -56,7 +56,7 @@ export function AuthorRequestModal({ isOpen, onClose, userId }) {
           }),
         });
       } catch (emailError) {
-        console.error('Error sending author application email:', emailError);
+
         // Don't fail the submission if email fails
       }
 
@@ -75,7 +75,7 @@ export function AuthorRequestModal({ isOpen, onClose, userId }) {
         });
       }, 3000);
     } catch (error) {
-      console.error('Error submitting author request:', error);
+
       toast.error('Failed to submit request. Please try again.');
     } finally {
       setLoading(false);

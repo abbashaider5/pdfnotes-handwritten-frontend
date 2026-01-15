@@ -97,7 +97,9 @@ export function Analytics() {
         userOrders,
       });
     } catch (error) {
-      console.error('Error fetching analytics:', error);
+      if (import.meta.env.DEV) {
+
+      }
     } finally {
       setLoading(false);
     }

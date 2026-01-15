@@ -77,7 +77,7 @@ export function PDFDetail() {
           setCountdown(null);
         }
       } catch (error) {
-        console.error('Error checking guest purchase:', error);
+        // Silent fail for localStorage issues
       }
       return false;
     };
@@ -109,16 +109,12 @@ export function PDFDetail() {
 
       if (error) throw error;
 
-      console.log('PDF data:', data);
-      console.log('PDF author_id:', data.author_id);
-
       setPdf(data);
 
       // Fetch author profile separately if author_id exists
       if (data.author_id) {
         await fetchAuthorProfile(data.author_id);
       } else {
-        console.log('No author_id found in PDF, showing default Admin display');
         setAuthor(null);
       }
 
@@ -130,12 +126,16 @@ export function PDFDetail() {
             .createSignedUrl(data.preview_image_path, 300);
           
           if (urlError) {
-            console.error('Error creating signed URL for preview:', urlError);
+            if (import.meta.env.DEV) {
+
+            }
           } else {
             setPreviewUrl(signedUrlData.signedUrl);
           }
         } catch (error) {
-          console.error('Error generating preview URL:', error);
+          if (import.meta.env.DEV) {
+
+          }
         }
       }
 
@@ -159,7 +159,9 @@ export function PDFDetail() {
         setUserRole(role);
       }
     } catch (error) {
-      console.error('Error fetching PDF:', error);
+      if (import.meta.env.DEV) {
+
+      }
     } finally {
       setLoading(false);
     }
@@ -169,32 +171,25 @@ export function PDFDetail() {
   const fetchAuthorProfile = async (authorId) => {
     setLoadingAuthor(true);
     try {
-      console.log('Fetching author profile for authorId:', authorId);
       const { data, error } = await supabase
         .from('profiles')
         .select('name, is_verified, role')
         .eq('id', authorId)
         .maybeSingle();
 
-      console.log('Author profile data:', data);
-      console.log('Author profile error:', error);
-
       if (data && !error) {
-        console.log('Setting author:', {
-          name: data.name,
-          is_verified: data.is_verified
-        });
         setAuthor({
           name: data.name,
           is_verified: data.is_verified
         });
       } else {
         // No profile found, set author to null to show default "Admin" display
-        console.log('No author profile found, showing default Admin display');
         setAuthor(null);
       }
     } catch (error) {
-      console.error('Error fetching author profile:', error);
+      if (import.meta.env.DEV) {
+
+      }
       setAuthor(null);
     } finally {
       setLoadingAuthor(false);
@@ -218,7 +213,8 @@ export function PDFDetail() {
     try {
       // If we have an orderId from temporary storage, use backend download API
       if (orderId) {
-        const downloadUrl = `http://localhost:3001/api/download-pdf?order_id=${orderId}`;
+        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+        const downloadUrl = `${backendUrl}/api/download-pdf?order_id=${orderId}`;
         window.open(downloadUrl, '_blank');
         toast.success('Download started!');
       } else {
@@ -234,7 +230,8 @@ export function PDFDetail() {
             .single();
           
           if (order) {
-            const downloadUrl = `http://localhost:3001/api/download-pdf?order_id=${order.id}`;
+            const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+            const downloadUrl = `${backendUrl}/api/download-pdf?order_id=${order.id}`;
             window.open(downloadUrl, '_blank');
             toast.success('Download started!');
           } else {
@@ -243,7 +240,6 @@ export function PDFDetail() {
         }
       }
     } catch (error) {
-      console.error('Download error:', error);
       toast.error('Download failed. Please try again or check your email.');
     } finally {
       setDownloading(false);
@@ -320,7 +316,7 @@ export function PDFDetail() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-8">
               <a href="/" className="text-2xl font-bold text-primary">
-                PDF Store
+                PDFNotes
               </a>
             </div>
             <div className="flex items-center gap-4">

@@ -32,7 +32,7 @@ export function UserDashboardLayout({ title, children }) {
               <div className="flex justify-between items-center h-16">
                 <div className="flex items-center gap-8">
                   <a href="/" className="text-2xl font-bold text-primary">
-                    PDF Store
+                    PDFNotes
                   </a>
                 </div>
                 <div className="flex items-center gap-4">

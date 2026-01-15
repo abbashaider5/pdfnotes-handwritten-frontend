@@ -58,9 +58,8 @@ export function Settings() {
         // Handle case where no row exists yet (first-time setup)
         if (paymentError.code === 'PGRST116') {
           // No rows found - this is expected for first-time setup
-          console.log('No payment settings found - using defaults');
         } else {
-          console.error('Error fetching payment settings:', paymentError);
+
         }
       }
 
@@ -81,13 +80,13 @@ export function Settings() {
       setTimeout(() => {
         setSettings(prev => ({
           ...prev,
-          storeName: 'My PDF Store',
+          storeName: 'PDFNotes',
           storeDescription: 'High-quality study materials and notes',
         }));
         setLoading(false);
       }, 500);
     } catch (error) {
-      console.error('Error fetching settings:', error);
+
       setLoading(false);
     }
   };
@@ -116,7 +115,7 @@ export function Settings() {
         .maybeSingle();
 
       if (fetchError && fetchError.code !== 'PGRST116') {
-        console.error('Error checking existing settings:', fetchError);
+
         throw fetchError;
       }
 
@@ -140,7 +139,7 @@ export function Settings() {
 
       toast.success('Payment settings saved successfully!');
     } catch (error) {
-      console.error('Error saving payment settings:', error);
+
       toast.error('Error saving payment settings');
     } finally {
       setSaving(false);
@@ -155,7 +154,7 @@ export function Settings() {
       await new Promise(resolve => setTimeout(resolve, 1000));
       toast.success('Settings saved successfully!');
     } catch (error) {
-      console.error('Error saving settings:', error);
+
       toast.error('Error saving settings');
     } finally {
       setSaving(false);

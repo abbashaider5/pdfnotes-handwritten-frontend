@@ -80,7 +80,9 @@ export function AuthorDashboard() {
       setThresholdAmount(userThreshold);
       setThresholdInput(userThreshold);
     } catch (error) {
-      console.error('Error fetching author stats:', error);
+      if (import.meta.env.DEV) {
+
+      }
     } finally {
       setLoading(false);
     }
@@ -93,12 +95,9 @@ export function AuthorDashboard() {
       if (user) {
         setUserId(user.id);
         
-        console.log('Fetching payouts for user:', user.id);
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
         const response = await fetch(`${backendUrl}/api/author/payout-requests?user_id=${user.id}`);
         const data = await response.json();
-        
-        console.log('Payouts response:', data);
         
         if (data.success) {
           setPayouts(data.payouts || []);
@@ -107,7 +106,9 @@ export function AuthorDashboard() {
         }
       }
     } catch (error) {
-      console.error('Error fetching payouts:', error);
+      if (import.meta.env.DEV) {
+
+      }
       setPayouts([]);
     } finally {
       setLoading(false);
@@ -128,7 +129,9 @@ export function AuthorDashboard() {
       setThresholdAmount(parseFloat(thresholdInput));
       toast.success('Threshold amount updated successfully!');
     } catch (error) {
-      console.error('Error updating threshold:', error);
+      if (import.meta.env.DEV) {
+
+      }
       toast.error('Failed to update threshold amount. Please try again.');
     }
   };
@@ -151,7 +154,9 @@ export function AuthorDashboard() {
       await fetchAuthorStats();
       toast.success('Earnings cleared successfully!');
     } catch (error) {
-      console.error('Error clearing earnings:', error);
+      if (import.meta.env.DEV) {
+
+      }
       toast.error('Failed to clear earnings. Please try again.');
     }
   };
@@ -212,7 +217,9 @@ export function AuthorDashboard() {
       await fetchAuthorStats();
       toast.success('PDF uploaded successfully!');
     } catch (error) {
-      console.error('Error uploading PDF:', error);
+      if (import.meta.env.DEV) {
+
+      }
       toast.error('Failed to upload PDF. Please try again.');
     } finally {
       setUploading(false);
@@ -276,7 +283,9 @@ export function AuthorDashboard() {
         toast.error(data.error || 'Failed to submit payout request');
       }
     } catch (error) {
-      console.error('Error requesting payout:', error);
+      if (import.meta.env.DEV) {
+
+      }
       toast.error('Failed to submit payout request');
     } finally {
       setRequestingPayout(false);

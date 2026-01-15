@@ -26,7 +26,8 @@ export function AuthorPayouts() {
       if (user) {
         setUserId(user.id);
 
-        const response = await fetch(`http://localhost:3001/api/author/earnings?user_id=${user.id}`);
+        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+        const response = await fetch(`${backendUrl}/api/author/earnings?user_id=${user.id}`);
         const data = await response.json();
         
         if (data.success) {
@@ -34,7 +35,7 @@ export function AuthorPayouts() {
         }
       }
     } catch (error) {
-      console.error('Error fetching balance:', error);
+
     }
   };
 
@@ -43,7 +44,8 @@ export function AuthorPayouts() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        const response = await fetch(`http://localhost:3001/api/author/payout-requests?user_id=${user.id}`);
+        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+        const response = await fetch(`${backendUrl}/api/author/payout-requests?user_id=${user.id}`);
         const data = await response.json();
         
         if (data.success) {
@@ -51,7 +53,7 @@ export function AuthorPayouts() {
         }
       }
     } catch (error) {
-      console.error('Error fetching payouts:', error);
+
     } finally {
       setLoading(false);
     }
@@ -78,7 +80,8 @@ export function AuthorPayouts() {
     setRequestingPayout(true);
 
     try {
-      const response = await fetch('http://localhost:3001/api/author/payout-request', {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+      const response = await fetch(`${backendUrl}/api/author/payout-request`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -101,7 +104,7 @@ export function AuthorPayouts() {
         toast.error(data.error || 'Failed to submit payout request');
       }
     } catch (error) {
-      console.error('Error requesting payout:', error);
+
       toast.error('Failed to submit payout request');
     } finally {
       setRequestingPayout(false);

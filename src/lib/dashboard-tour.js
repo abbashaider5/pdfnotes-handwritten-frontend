@@ -93,7 +93,7 @@ export function useDashboardTour() {
         position: 'left',
       },
       {
-        intro: "You're all set! Start managing your PDF store 🚀",
+        intro: "You're all set! Start managing your PDFNotes dashboard 🚀",
       },
     ];
 
